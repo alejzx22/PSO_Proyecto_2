@@ -83,8 +83,6 @@ class MMUTable(BaseTable):
 
         for i in range(self.columnCount()):
             self.setColumnWidth(i, 80)
-        for i in range(self.rowCount()):
-            self.setRowHeight(i, 30)
 
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         
@@ -96,6 +94,9 @@ class MMUTable(BaseTable):
         total, processes, pages_info, computer = data                         
 
         self.setRowCount(total)
+        for i in range(self.rowCount()):
+            self.setRowHeight(i, 10)
+
         
         # for process in processes:
         #     pid = process.pid
@@ -420,7 +421,9 @@ class TableWindow(QMainWindow):
             process_pages = []
             process_pages.append(color)
             for pointer in pointers:
-                process_pages.extend(self.computer.other_mmu.memory_map[pointer])
+                # Check if the pointer is in the memory map
+                if pointer in self.computer.other_mmu.memory_map:
+                    process_pages.extend(self.computer.other_mmu.memory_map[pointer])
             other_ram_pages.append(process_pages)
            
         for process in main_processes:
@@ -429,7 +432,9 @@ class TableWindow(QMainWindow):
             process_pages = []
             process_pages.append(color)
             for pointer in pointers:
-                process_pages.extend(self.computer.opt_mmu.memory_map[pointer])
+                # Check if the pointer is in the memory map
+                if pointer in self.computer.opt_mmu.memory_map:
+                    process_pages.extend(self.computer.opt_mmu.memory_map[pointer])
             opt_ram_pages.append(process_pages)
 
         self.ram_alg_table.update_data(other_ram_pages)
