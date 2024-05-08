@@ -67,6 +67,8 @@ class MMU:
     def use(self, pointer: int):
         if len(self.memory_map) == 0:
             return
+        if pointer not in self.memory_map:
+            return
         
         # Get the pages from the memory map
         pages = self.memory_map[pointer]
@@ -81,7 +83,9 @@ class MMU:
                 self.thrashing_time += time
             self.total_time += time
 
-    def delete(self, pointer: int):        
+    def delete(self, pointer: int):    
+        if pointer not in self.memory_map:
+            return    
         pages = self.memory_map[pointer]
         for page in pages:
             if (page.position_flag == True):
